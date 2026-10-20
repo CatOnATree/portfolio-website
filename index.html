@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katriana Trinh — Biomedical Engineer</title>
+<meta name="description" content="Portfolio of Katriana Trinh, biomedical engineer designing medical devices.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-active="home">
+
+  <!-- =============================================================
+       SITE ARCHITECTURE — read this first
+       =============================================================
+       This page is a single-page app. Every top-level area (Home,
+       About Me, Engineering Projects, Hobbies, Experience & Skills,
+       Contact) is one <section class="panel" data-panel="KEY"> below,
+       plus a matching entry in js/script.js's SECTIONS object that
+       tells the background city where to zoom for that area.
+
+       Anything that triggers navigation (nav buttons, hub cards,
+       gallery cards, back links) is just an element with
+       data-nav="KEY" — clicking it shows the panel with a matching
+       data-panel="KEY" and zooms the background accordingly. This
+       works automatically for ANY data-panel/data-nav pair, so you
+       can add pages without editing the JS router.
+
+       Two kinds of pages:
+         - Top-level sections need a SECTIONS entry in script.js
+           (background zoom position) — see the six existing ones.
+         - Detail / child pages (e.g. one Hobby project) just need
+           data-zoom-from="parentKey" instead — they reuse the
+           parent's zoom, no script.js edit needed. See
+           "panel-hobby-1" below for the pattern.
+
+       Full router documentation lives in the comment block at the
+       top of js/script.js.
+       ============================================================= -->
+
+  <!-- ============ BACKGROUND CITY ============ -->
+  <div class="scene-viewport" aria-hidden="true">
+    <div class="city" id="city">
+      <div class="layer sky"></div>
+      <div class="layer moon"></div>
+      <div class="layer stars"></div>
+      <div class="layer skyline-far"></div>
+      <div class="layer skyline-mid"></div>
+
+      <!-- LANDMARK: HOME — central holo-ring monument -->
+      <div class="landmark landmark-home" id="landmark-home">
+        <div class="ring ring-outer"></div>
+        <div class="ring ring-inner"></div>
+        <div class="holo-figure"></div>
+        <div class="holo-base"></div>
+        <div class="orbit-label ol-1">BME</div>
+        <div class="orbit-label ol-2">MEDTECH</div>
+        <div class="orbit-label ol-3">UMN</div>
+      </div>
+
+      <!-- LANDMARK: ABOUT ME — placeholder only.
+           Zoom target for the "aboutme" section is already wired up
+           in script.js (SECTIONS.aboutme). This div is just an empty
+           anchor point so the zoom has something to focus on — swap
+           its contents for real landmark art whenever you get to the
+           visual pass (see .landmark-placeholder in style.css). -->
+      <div class="landmark landmark-placeholder landmark-aboutme" id="landmark-aboutme">
+        <div class="placeholder-dot"></div>
+        <div class="tower-sign">ABOUT ME</div>
+      </div>
+
+      <!-- LANDMARK: ENGINEERING PROJECTS — poster tower -->
+      <div class="landmark landmark-projects" id="landmark-projects">
+        <div class="tower-shaft"></div>
+        <div class="poster-panel pp-1"><span>BOWELPROBE™</span></div>
+        <div class="poster-panel pp-2"><span>PESSASSIST</span></div>
+        <div class="poster-panel pp-3"><span>COMMUNITREE</span></div>
+        <div class="poster-panel pp-4"><span>EEG · FEM +</span></div>
+        <div class="tower-sign">PROJECT ARCHIVE</div>
+      </div>
+
+      <!-- LANDMARK: HOBBIES — placeholder only, same deal
+           as landmark-aboutme above. Zoom target already wired up
+           as SECTIONS.hobbies in script.js. -->
+      <div class="landmark landmark-placeholder landmark-hobbies" id="landmark-hobbies">
+        <div class="placeholder-dot"></div>
+        <div class="tower-sign">HOBBIES</div>
+      </div>
+
+      <!-- LANDMARK: EXPERIENCE & SKILLS — data spire -->
+      <div class="landmark landmark-experience" id="landmark-experience">
+        <div class="tower-shaft data-shaft"></div>
+        <div class="data-ring dr-1"></div>
+        <div class="data-ring dr-2"></div>
+        <div class="ticker"><div class="ticker-track">EIS &nbsp;·&nbsp; MEDICAL DEVICE DESIGN &nbsp;·&nbsp; CAD &nbsp;·&nbsp; EMBEDDED SENSING &nbsp;·&nbsp; ISO 13485 &nbsp;·&nbsp; CIRCUIT DESIGN &nbsp;·&nbsp; PROTOTYPING &nbsp;·&nbsp; EIS &nbsp;·&nbsp; MEDICAL DEVICE DESIGN &nbsp;·&nbsp; CAD &nbsp;·&nbsp; EMBEDDED SENSING &nbsp;·&nbsp; ISO 13485 &nbsp;·&nbsp; CIRCUIT DESIGN &nbsp;·&nbsp; PROTOTYPING &nbsp;</div></div>
+        <div class="tower-sign">SKILL FEED</div>
+      </div>
+
+      <!-- LANDMARK: CONTACT — rooftop comm spire -->
+      <div class="landmark landmark-contact" id="landmark-contact">
+        <div class="antenna"></div>
+        <div class="signal-ring sr-1"></div>
+        <div class="signal-ring sr-2"></div>
+        <div class="signal-ring sr-3"></div>
+        <div class="tower-sign">TRANSMIT</div>
+      </div>
+
+      <div class="layer skyline-near"></div>
+      <div class="layer road"></div>
+      <div class="layer rain"></div>
+      <div class="layer scanlines"></div>
+      <div class="layer vignette"></div>
+    </div>
+  </div>
+
+  <!-- ============ HUD ============ -->
+  <header class="hud-top">
+    <button class="hud-logo" data-nav="home" aria-label="Return to home">
+      <span class="hud-logo-mark">KT</span>
+      <span class="hud-logo-text">KATRIANA&nbsp;TRINH</span>
+    </button>
+    <div class="hud-readout">
+      <span class="hud-readout-label">SECTOR</span>
+      <span class="hud-readout-value" id="sector-value">00 / 05</span>
+    </div>
+    <button class="hud-settings" id="reduce-motion-toggle" aria-pressed="false">
+      <span class="hud-dot"></span> <span class="hud-settings-text">MOTION</span>
+    </button>
+  </header>
+
+  <button class="back-btn" id="back-btn" data-nav="home">
+    <span class="back-arrow">↖</span> RETURN TO HOME
+  </button>
+
+  <!-- ============ MAP / QUICK NAV ============
+       One button per TOP-LEVEL section only (never link a detail/
+       child page here — those are reached via gallery cards). Each
+       data-nav value must match a data-panel value below AND a
+       SECTIONS key in script.js. -->
+  <nav class="hud-map" aria-label="Section navigation">
+    <button class="map-node" data-nav="home"><span class="map-node-dot"></span>Home</button>
+    <button class="map-node" data-nav="aboutme"><span class="map-node-dot"></span>About Me</button>
+    <button class="map-node" data-nav="projects"><span class="map-node-dot"></span>Engineering Projects</button>
+    <button class="map-node" data-nav="hobbies"><span class="map-node-dot"></span>Hobbies</button>
+    <button class="map-node" data-nav="experience"><span class="map-node-dot"></span>Experience &amp; Skills</button>
+    <button class="map-node" data-nav="contact"><span class="map-node-dot"></span>Contact</button>
+  </nav>
+
+  <!-- ============ CONTENT PANELS ============ -->
+  <main class="content-panels">
+
+    <section class="panel" id="panel-home" data-panel="home">
+      <div class="panel-inner hub-inner">
+        <p class="eyebrow">WELCOME TO MY PAGE · KATRIANA'S PORTFOLIO</p>
+        <h1 class="hero-title">Biomedical Engineer,<br>building devices that make<br>critical decisions <em>clearer</em>.</h1>
+        <p class="hero-sub">
+          I'm a Biomedical Engineering student at the University of Minnesota–Twin Cities.
+          I have a passion for medical device development and learning new skills!
+        </p>
+        <div class="hub-links">
+          <!-- Template for any new hub card — duplicate, change
+               data-nav to the target section's key, edit the two
+               spans:
+          <button class="hub-link" data-nav="sectionKey">
+            <span class="hub-link-title">Title</span>
+            <span class="hub-link-desc">Short teaser →</span>
+          </button>
+          -->
+          <button class="hub-link" data-nav="aboutme">
+            <span class="hub-link-title">About Me</span>
+            <span class="hub-link-desc">The longer story →</span>
+          </button>
+          <button class="hub-link" data-nav="projects">
+            <span class="hub-link-title">Engineering Projects</span>
+            <span class="hub-link-desc">BowelProbe™, PessAssist &amp; more →</span>
+          </button>
+          <button class="hub-link" data-nav="hobbies">
+            <span class="hub-link-title">Hobbies</span>
+            <span class="hub-link-desc">My favorite pasttimes →</span>
+          </button>
+          <button class="hub-link" data-nav="experience">
+            <span class="hub-link-title">Experience &amp; Skills</span>
+            <span class="hub-link-desc">Tools, coursework, hands-on work →</span>
+          </button>
+          <button class="hub-link" data-nav="contact">
+            <span class="hub-link-title">Contact</span>
+            <span class="hub-link-desc">Let's talk →</span>
+          </button>
+        </div>
+      
+      </div>
+    </section>
+
+    <!-- =============================================================
+         ABOUT ME — placeholder framework only. Structured as a set
+         of clearly-labeled slots so you can drop content/media in
+         without having to invent layout later. Delete any slot you
+         don't end up using, or duplicate .about-block for more.
+         ============================================================= -->
+    <section class="panel" id="panel-aboutme" data-panel="aboutme">
+      <div class="panel-inner">
+        <p class="eyebrow">AREA · 01 OF 05 · ABOUT ME</p>
+        <h2 class="section-title">About Me</h2>
+        <p class="section-lede">Hello! My name is Katriana. I completed my Bachelors in Biomedical Engineering at the University of Minnesota Twin Cities College of Science and Engineering. Thanks for popping by my page. </p>
+
+        <div class="about-grid">
+
+          <!-- BIO TEXT SLOT -->
+          <div class="about-block about-block-wide">
+            <h3>My Story</h3>
+            <p class="editable-note"> Since I was a kid, I always wanted to work in the medical field to help people. Then, I discovered FIRST Robotics and absolutely fell in love with the creative problem solving that comes with working on a team for a multifaceted system. Biomedical Engineering immediately drew me in with its patient focused approach to engineering. I believe empathy and understanding the unmet needs of the patient populations are crucial. Ultimately, the patient experience and their quality of life seeing robust improvement is what I strive for. I am also a lifelong learner and am always looking to connect wtih peers and mentors to learn as much as I can! </p>
+          </div>
+
+          <!-- FUN FACTS / QUICK HITS SLOT -->
+          <div class="about-block">
+            <h3>Certifications</h3>
+            <ul class="project-meta">
+              <li>Six Sigma Yellow Belt </li>
+              <li>CWSA</li>
+              <li>MATLAB Onboard</li>
+            </ul>
+          </div>
+
+          <!-- INTERESTS / OUTSIDE-THE-LAB SLOT -->
+          <div class="about-block">
+            <h3>Other Interests! See Hobbies Page for more info</h3>
+            <div class="skill-tags">
+              <span>Visual Arts</span><span>Electronic Shuffling</span><span>Video Production and Editing</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================================
+         ENGINEERING PROJECTS — gallery page. Each card below is a
+         data-nav trigger pointing at its own detail panel further
+         down (data-panel="project-KEY", each declaring
+         data-zoom-from="projects" so it reuses this section's
+         background zoom — no script.js edit needed).
+
+         TO ADD ANOTHER PROJECT:
+           1. Duplicate one <button class="project-card gallery-card">
+              below, point data-nav at a new unique key
+              (e.g. "project-foo") and update the thumb / title / tag /
+              teaser.
+           2. Duplicate a whole "panel-project-*" <section> further
+              down, give it a matching data-panel value, and fill in
+              its content + media slots.
+         ============================================================= -->
+    <section class="panel" id="panel-projects" data-panel="projects">
+      <div class="panel-inner">
+        <p class="eyebrow">AREA · 02 OF 05 · PROJECT ARCHIVE</p>
+        <h2 class="section-title">Engineering Projects</h2>
+        <p class="section-lede">Medical-device design and computational-modeling projects from my BME coursework and competitions. Click any card for the full write-up, figures, and documents.</p>
+
+        <div class="project-grid gallery-grid">
+          <button class="project-card gallery-card" data-nav="project-bowelprobe">
+            <img class="pd-thumb" src="assets/projects/bowelprobe/poster-2025.png" alt="Viable Bowel Probe research poster" loading="lazy">
+            <div class="project-card-head">
+              <h3>BowelProbe&trade;</h3>
+              <span class="project-tag">Medical Device · Impedance Spectroscopy</span>
+            </div>
+            <p>A handheld probe that gives surgeons objective, real-time bowel-tissue viability data during ischemia surgery. Johns Hopkins CBID Device Design Competition finalist.</p>
+            <span class="card-cta">View project &rarr;</span>
+          </button>
+
+          <button class="project-card gallery-card" data-nav="project-pessassist">
+            <img class="pd-thumb" src="assets/projects/pessassist/cad-render.png" alt="PessAssist Device CAD render" loading="lazy">
+            <div class="project-card-head">
+              <h3>PessAssist Device (PAD)</h3>
+              <span class="project-tag">Assistive Device · Embedded Sensing</span>
+            </div>
+            <p>A device that lets pelvic-organ-prolapse patients safely remove their own Gellhorn pessary. 1st Place, BME Senior Design Showcase.</p>
+            <span class="card-cta">View project &rarr;</span>
+          </button>
+
+          <button class="project-card gallery-card" data-nav="project-communitree">
+            <img class="pd-thumb" src="assets/projects/communitree/title-card.png" alt="CommuniTree app demo" loading="lazy" onerror="this.style.display='none'">
+            <div class="project-card-head">
+              <h3>CommuniTree</h3>
+              <span class="project-tag">Software · Social / Hackathon</span>
+            </div>
+            <p>A BeReal-style social app that turns daily sustainability challenges into a game. 1st Place &amp; Most Technical, TonkaHacks 2022.</p>
+            <span class="card-cta">View project &rarr;</span>
+          </button>
+
+          <button class="project-card gallery-card" data-nav="project-eeg-depression">
+            <img class="pd-thumb" src="assets/projects/eeg-depression/model-comparison.png" alt="EEG depression model comparison" loading="lazy">
+            <div class="project-card-head">
+              <h3>Gamma EEG Depression Screening</h3>
+              <span class="project-tag">Neural Decoding · Machine Learning</span>
+            </div>
+            <p>Machine-learning models that screen for depressive disorder from 5&nbsp;minutes of resting-state EEG. Best model: tuned XGBoost, ROC-AUC 74%.</p>
+            <span class="card-cta">View project &rarr;</span>
+          </button>
+
+          <button class="project-card gallery-card" data-nav="project-lfp-analysis">
+            <img class="pd-thumb" src="assets/projects/lfp-analysis/average-haa.png" alt="Local field potential analysis plots" loading="lazy">
+            <div class="project-card-head">
+              <h3>LFP Processing Analysis</h3>
+              <span class="project-tag">Neural Signal Processing</span>
+            </div>
+            <p>Time-resolved analysis of intracranial local field potentials during a cognitive-conflict task — ROC/AUC effect sizes and linear models.</p>
+            <span class="card-cta">View project &rarr;</span>
+          </button>
+
+          <button class="project-card gallery-card" data-nav="project-skin-diffusion">
+            <img class="pd-thumb" src="assets/projects/skin-diffusion/concentration-t72.png" alt="Skin drug diffusion FEM heat map" loading="lazy">
+            <div class="project-card-head">
+              <h3>Topical Cream Diffusion Model</h3>
+              <span class="project-tag">Finite Element Modeling</span>
+            </div>
+            <p>A 2-D finite-element model of how a topical drug diffuses from the skin surface into the dermis. Validated to 0.08% of the analytical half-life.</p>
+            <span class="card-cta">View project &rarr;</span>
+          </button>
+
+          <button class="project-card gallery-card" data-nav="project-neuron-propagation">
+            <img class="pd-thumb" src="assets/projects/neuron-propagation/voltage-along-fiber.png" alt="Action potential propagation plot" loading="lazy">
+            <div class="project-card-head">
+              <h3>Neuron Stimulus Propagation</h3>
+              <span class="project-tag">Finite Element Modeling</span>
+            </div>
+            <p>A finite-element cable-equation model of action-potential propagation down an active nerve fiber, with Hodgkin&ndash;Huxley membrane dynamics.</p>
+            <span class="card-cta">View project &rarr;</span>
+          </button>
+
+          <article class="project-card project-card-empty">
+            <div class="project-card-head">
+              <h3>Your next project</h3>
+              <span class="project-tag">Reserved slot</span>
+            </div>
+            <p>Ready for whatever comes next — duplicate a gallery card (and its matching detail section) in <code>index.html</code>.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================================
+         PROJECT DETAIL PAGES
+         data-zoom-from="projects" → reuse the Projects background zoom.
+         PDFs use data-pdf (not src) and are loaded lazily by the
+         router when the panel is first opened — see js/script.js.
+         ============================================================= -->
+
+    <section class="panel" id="panel-project-bowelprobe" data-panel="project-bowelprobe" data-zoom-from="projects" data-title="BowelProbe">
+      <div class="panel-inner">
+        <a class="inline-back-link" href="#/projects" data-nav="projects">&larr; Back to Engineering Projects</a>
+        <p class="eyebrow">PROJECT ARCHIVE · 01</p>
+        <h2 class="section-title">BowelProbe&trade;</h2>
+        <p class="section-lede">Real-time bowel-tissue viability assessment using electrical impedance spectroscopy (EIS).</p>
+        <p class="pd-lede-team">Physicians Inspired Engineering Solutions (PIES) research program, Fall 2024&ndash;Spring 2025, with Asher Shertok, Rebecca Kroll, Cassandra Doshi, and Aaron Lorenz &mdash; Advisor Dr.&nbsp;Datario. Carried forward (2025&ndash;2026) with Asher Shertok and Jason Jensen.</p>
+
+        <figure class="pd-figure pd-hero">
+          <img src="assets/projects/bowelprobe/poster-2025.png" alt="Viable Bowel Probe research poster, PIES BMEn 4151 Spring 2025">
+          <figcaption>Research poster &mdash; &ldquo;Viable Bowel Probe to Measure Bowel Impedance,&rdquo; PIES BMEn&nbsp;4151, Spring 2025.</figcaption>
+        </figure>
+
+        <div class="pd-section">
+          <h3>At a glance</h3>
+          <ul>
+            <li>Medical device &middot; electrical impedance spectroscopy</li>
+            <li>Began in the Physicians Inspired Engineering Solutions (PIES) research program, Fall 2024&ndash;Spring 2025; carried forward 2025&ndash;2026</li>
+            <li>Johns Hopkins CBID Device Design Competition &mdash; Advanced Health Track <strong>Finalist</strong> (1 of 8 from 500+ teams), 2026</li>
+            <li>Provisional patent filed</li>
+            <li>Regulatory target: FDA 510(k) Class&nbsp;II (predicate: bioimpedance monitors, product code DSB); De&nbsp;Novo as fallback</li>
+            <li>Validation plan: benchtop phantoms &rarr; ex-vivo animal &rarr; in-vivo ischemia&ndash;reperfusion vs. gold-standard histopathology</li>
+          </ul>
+        </div>
+
+        <div class="pd-section pd-role">
+          <p class="pd-role-title">MY CONTRIBUTION &mdash; PRODUCT DEVELOPMENT DIRECTOR</p>
+          <ul>
+            <li>Designed and iterated the ergonomic handheld probe in SOLIDWORKS.</li>
+            <li>Researched electrode and circuit components that measure tissue impedance without harming tissue.</li>
+            <li>Acted as the team's subject-matter expert on manufacturing and material properties, selecting biocompatible materials for the electrodes and the electronics housing.</li>
+            <li>Served as primary spokesperson for the product &mdash; defining its scope, articulating the unmet clinical need, and mapping future applications, including a path into robotic-assisted surgery.</li>
+          </ul>
+        </div>
+
+        <div class="pd-section">
+          <h3>The problem</h3>
+          <p>Acute mesenteric ischemia is one of the most lethal surgical emergencies, with mortality of 50&ndash;80%. Surgeons must distinguish viable from non-viable bowel: under-resection risks sepsis, while over-resection causes Short Bowel Syndrome, which carries a lifelong treatment cost above $150,000 per patient. Up to 25% of suspected-ischemia patients undergo a &ldquo;second-look&rdquo; operation to re-check borderline tissue, adding roughly $25,000 each. Today that call is made with visual inspection, palpation, and ICG fluorescence dye &mdash; a consumable that measures blood flow rather than cellular structure, costs $150+ per use, and requires darkening the room.</p>
+        </div>
+
+        <div class="pd-section">
+          <h3>How it works</h3>
+          <p>Ischemia breaks down cell-membrane integrity and ion gradients, which measurably lowers tissue electrical impedance. The probe measures voltage across the bowel surface; a controller computes impedance, classifies viability, and drives a dual-mode output &mdash; a green light for viable tissue, or a red light plus an alarm for non-viable tissue. The proof-of-concept signal chain is a voltage divider with a 100&nbsp;&Omega; precision reference resistor, a high-impedance buffer, a precision &ldquo;super-diode&rdquo; rectifier (which removes the 0.7&nbsp;V diode drop for low-amplitude biological signals), and an RC low-pass filter feeding a microcontroller. Literature places the optimal measurement frequency near 1&nbsp;MHz. Each reading takes under five seconds and uses no consumables.</p>
+          <div class="pd-gallery">
+            <figure class="pd-figure">
+              <img src="assets/projects/bowelprobe/circuit-schematic.png" alt="Proof-of-concept circuit schematic" loading="lazy">
+              <figcaption>Proof-of-concept signal-chain schematic: voltage divider &rarr; buffer &rarr; precision rectifier &rarr; RC filter.</figcaption>
+            </figure>
+            <figure class="pd-figure">
+              <img src="assets/projects/bowelprobe/block-diagram.png" alt="Functional block diagram" loading="lazy">
+              <figcaption>Functional block diagram: probe measures voltage, controller computes viability, output is green light or red light + alarm.</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="pd-section">
+          <h3>Prototype &amp; testing</h3>
+          <p>SOLIDWORKS handle studies used literature-based ridges and grooves for grip (41&nbsp;mm diameter, 140&nbsp;mm length). Prototype&nbsp;1 of the probe body uses single-use bipolar electrodes. Bench testing on resistors and skin measured a skin resistance of about 45&nbsp;k&Omega;, within literature values. A key limitation from the Spring 2025 build: the current sensors on hand (INA219, CS70331, INA333) resolved only to ~50&nbsp;A &mdash; far coarser than the sub-milliamp, tissue-safe range &mdash; so the proof-of-concept read near 0&nbsp;A. The next step is a higher-resolution current sensor for live-tissue testing.</p>
+          <div class="pd-gallery">
+            <figure class="pd-figure">
+              <img src="assets/projects/bowelprobe/probe-cad.jpg" alt="Probe body CAD, prototype 1" loading="lazy">
+              <figcaption>Prototype&nbsp;1 probe body (SOLIDWORKS) &mdash; handheld, battery-run, with bipolar electrodes.</figcaption>
+            </figure>
+            <figure class="pd-figure">
+              <img src="assets/projects/bowelprobe/handle-cad.jpg" alt="Ergonomic handle CAD studies" loading="lazy">
+              <figcaption>Ergonomic handle studies with literature-based ridges and grooves.</figcaption>
+            </figure>
+            <figure class="pd-figure">
+              <img src="assets/projects/bowelprobe/bench-test.jpg" alt="Bench testing bipolar electrodes on skin" loading="lazy">
+              <figcaption>Bench testing the circuit with bipolar electrodes on skin.</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="pd-section">
+          <h3>Documents</h3>
+          <div class="pd-docs">
+            <div class="pd-doc">
+              <p class="pd-doc-title">Johns Hopkins CBID Device Design Competition &mdash; written submission (2026)</p>
+              <iframe data-pdf="assets/projects/bowelprobe/docs/BowelProbe-JHU-Design-Competition-Submission.pdf#view=FitH" title="BowelProbe JHU design competition submission" loading="lazy"></iframe>
+              <a class="pd-doc-dl" href="assets/projects/bowelprobe/docs/BowelProbe-JHU-Design-Competition-Submission.pdf" target="_blank" rel="noopener">Open in a new tab / download &nearr;</a>
+            </div>
+            <div class="pd-doc">
+              <p class="pd-doc-title">Johns Hopkins CBID Device Design Competition &mdash; presentation</p>
+              <iframe data-pdf="assets/projects/bowelprobe/docs/BowelProbe-JHU-Presentation.pdf#view=FitH" title="BowelProbe JHU presentation" loading="lazy"></iframe>
+              <a class="pd-doc-dl" href="assets/projects/bowelprobe/docs/BowelProbe-JHU-Presentation.pdf" target="_blank" rel="noopener">Open in a new tab / download &nearr;</a>
+            </div>
+            <div class="pd-doc">
+              <p class="pd-doc-title">Viable Bowel Probe &mdash; research poster (Spring 2025)</p>
+              <iframe data-pdf="assets/projects/bowelprobe/docs/Viable-Bowel-Probe-Poster-Spring-2025.pdf#view=FitH" title="Viable Bowel Probe poster" loading="lazy"></iframe>
+              <a class="pd-doc-dl" href="assets/projects/bowelprobe/docs/Viable-Bowel-Probe-Poster-Spring-2025.pdf" target="_blank" rel="noopener">Open in a new tab / download &nearr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-project-pessassist" data-panel="project-pessassist" data-zoom-from="projects" data-title="PessAssist Device (PAD)">
+      <div class="panel-inner">
+        <a class="inline-back-link" href="#/projects" data-nav="projects">&larr; Back to Engineering Projects</a>
+        <p class="eyebrow">PROJECT ARCHIVE · 02</p>
+        <h2 class="section-title">PessAssist Device (PAD)</h2>
+        <p class="section-lede">An assistive device that lets pelvic-organ-prolapse patients safely remove their own Gellhorn pessary.</p>
+        <p class="pd-lede-team">UMN Biomedical Engineering Senior Design capstone, Fall 2025&ndash;Spring 2026, with Elizabeth Ngo, Jennifer Cook, Julia Gross, Sanab Abdi, and Sophia Zafari. Industry advisors: Dr.&nbsp;Paul Emerson, Shruti Iyer.</p>
+
+        <figure class="pd-figure pd-hero">
+          <img src="assets/projects/pessassist/poster-2026.png" alt="PessAssist Device Senior Design Showcase poster">
+          <figcaption>Biomedical Engineering Design Showcase poster, 2026 &mdash; 1st Place.</figcaption>
+        </figure>
+
+        <div class="pd-section">
+          <h3>At a glance</h3>
+          <ul>
+            <li>Assistive device &middot; embedded sensing + mechanism design</li>
+            <li>UMN Biomedical Engineering Senior Design capstone, Fall 2025&ndash;Spring 2026</li>
+            <li>BME Senior Design Showcase &mdash; <strong>1st Place</strong> (of 13 teams), April 2026</li>
+            <li>Biz Pitch Finalist (1 of 8 from 50 teams), Carlson School of Management &mdash; October 2025</li>
+            <li>Provisional patent filed</li>
+            <li>Clinical input from Dr.&nbsp;Folk and Dr.&nbsp;Collins (UMN) on pelvic organ prolapse and pessary use</li>
+          </ul>
+        </div>
+
+        <div class="pd-section pd-role">
+          <p class="pd-role-title">MY CONTRIBUTION</p>
+          <ul>
+            <li><strong>Clinical need:</strong> interviewed urologists, gynecologists, and nurses about the problems they see with pelvic organ prolapse, then wrote and analyzed a patient survey to quantify the unmet need and capture patient experience.</li>
+            <li><strong>Mechanism &amp; electronics:</strong> led system-level design of how the subsystems interact; ideated the mechanical locking mechanism; selected the motor and its placement for power and stability; designed the circuit schematic and wrote the Arduino code that fires the motor on a button press; positioned the suction-removal mechanism relative to the rest of the device.</li>
+            <li><strong>Design verification:</strong> authored the DV protocol for the J-handle's handheld-mobility evaluation and the acceptance criteria for the remaining system requirements, and ran DV as the test operator across all system requirements.</li>
+            <li>Team subject-matter expert on motors, tuning, and power.</li>
+          </ul>
+        </div>
+
+        <div class="pd-section">
+          <h3>The problem</h3>
+          <p>About half of women experience pelvic organ prolapse, and more than 51% prefer non-surgical management with a pessary. The Gellhorn pessary's geometry makes self-removal very difficult &mdash; especially for patients with limited dexterity, strength, or reach &mdash; and existing removal aids only fit simpler ring pessaries. That leaves many patients dependent on a clinician for routine pessary care.</p>
+        </div>
+
+        <div class="pd-section">
+          <h3>How it works</h3>
+          <p>PAD has three subsystems. A <strong>handheld J-handle probe</strong> houses the electronics and is shaped so the user can maneuver it while in a semi-Fowler position. A <strong>Gellhorn locking mechanism</strong> uses a spring-latch to grab the pessary stem and hold position throughout removal. An <strong>automated suction remover</strong> is motor-driven: it breaks the seal between the pessary and the prolapsed tissue and helps bend the pessary into a shape that is easier and safer to withdraw. An MPU6050 IMU measures the roll angle (rotation about the x-axis, &theta;&nbsp;=&nbsp;atan2(A<sub>y</sub>,&nbsp;A<sub>z</sub>)&nbsp;&middot;&nbsp;180/&pi;) against a patient-specific optimal insertion angle, sounding an alarm outside an 8&deg; tolerance.</p>
+          <figure class="pd-figure">
+            <img src="assets/projects/pessassist/how-pad-works.png" alt="How PAD works, from the project brochure" loading="lazy">
+            <figcaption>How PAD works &mdash; auditory grip feedback, automatic spring-latch, and button-initiated suction removal (project brochure).</figcaption>
+          </figure>
+          <div class="pd-gallery">
+            <figure class="pd-figure">
+              <img src="assets/projects/pessassist/cad-render.png" alt="PessAssist Device full SOLIDWORKS assembly" loading="lazy">
+              <figcaption>Final device &mdash; full SOLIDWORKS assembly with J-handle, motor compartment, and locking mechanism.</figcaption>
+            </figure>
+            <figure class="pd-figure">
+              <img src="assets/projects/pessassist/spool-cad.png" alt="Suction remover spool component" loading="lazy">
+              <figcaption>Suction-remover spool component.</figcaption>
+            </figure>
+          </div>
+          <figure class="pd-figure">
+            <img src="assets/projects/pessassist/circuit-schematic.png" alt="PAD electrical schematic" loading="lazy">
+            <figcaption>Electrical schematic &mdash; Arduino UNO driving a NEMA-17 stepper through an A4988 driver, an MPU-6050 IMU for angle feedback, a buzzer for the out-of-range alarm, and two push buttons, on a 12&nbsp;V rail.</figcaption>
+          </figure>
+        </div>
+
+        <div class="pd-section">
+          <h3>Design verification</h3>
+          <p>The team verified IMU angle sensing, the spring-latch locking mechanism, the motor's ability to bend the pessary into the proper configuration, and the ergonomics of the J-handle. The prototype evolved from hand-held concept mockups through breadboarded electronics to a working integrated build.</p>
+          <figure class="pd-figure">
+            <img src="assets/projects/pessassist/prototype-timeline.png" alt="Evolution of the PAD prototype" loading="lazy">
+            <figcaption>Evolution of PAD &mdash; concept mockups, breadboard electronics, and the integrated prototype.</figcaption>
+          </figure>
+        </div>
+
+        <div class="pd-section">
+          <h3>Demonstrations</h3>
+          <div class="pd-video-grid">
+            <figure class="pd-video">
+              <video src="assets/projects/pessassist/pessary-removal-demo.mp4" controls preload="metadata" playsinline></video>
+              <figcaption>Pessary removal demonstration.</figcaption>
+            </figure>
+            <figure class="pd-video">
+              <video src="assets/projects/pessassist/orientation-insertion.mp4" controls preload="metadata" playsinline></video>
+              <figcaption>Orientation and insertion with IMU angle feedback.</figcaption>
+            </figure>
+            <figure class="pd-video">
+              <video src="assets/projects/pessassist/motor-bending-concept.mp4" controls preload="metadata" playsinline></video>
+              <figcaption>Motor-driven pessary-bending concept.</figcaption>
+            </figure>
+            <figure class="pd-video">
+              <video src="assets/projects/pessassist/buttons-concept.mp4" controls preload="metadata" playsinline></video>
+              <figcaption>Button-control concept for suction release.</figcaption>
+            </figure>
+            <figure class="pd-video">
+              <video src="assets/projects/pessassist/prototype-clip.mp4" controls preload="metadata" playsinline></video>
+              <figcaption>Working prototype clip.</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="pd-section">
+          <h3>Future directions</h3>
+          <p>A clinician-guided orientation app would let providers define optimal insertion/removal angles with real-time feedback, and an optimized automated-suction run-time would further reduce reliance on user technique.</p>
+        </div>
+
+        <div class="pd-section">
+          <h3>Documents</h3>
+          <div class="pd-docs">
+            <div class="pd-doc">
+              <p class="pd-doc-title">BME Senior Design Showcase poster (2026)</p>
+              <iframe data-pdf="assets/projects/pessassist/docs/PessAssist-Senior-Design-Showcase-Poster.pdf#view=FitH" title="PessAssist Senior Design Showcase poster" loading="lazy"></iframe>
+              <a class="pd-doc-dl" href="assets/projects/pessassist/docs/PessAssist-Senior-Design-Showcase-Poster.pdf" target="_blank" rel="noopener">Open in a new tab / download &nearr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-project-communitree" data-panel="project-communitree" data-zoom-from="projects" data-title="CommuniTree">
+      <div class="panel-inner">
+        <a class="inline-back-link" href="#/projects" data-nav="projects">&larr; Back to Engineering Projects</a>
+        <p class="eyebrow">PROJECT ARCHIVE · 03</p>
+        <h2 class="section-title">CommuniTree</h2>
+        <p class="section-lede">A BeReal-style social app that turns daily sustainability challenges into a game.</p>
+        <p class="pd-lede-team">Nicholas Breitling, Parker Hitchcock, Katriana Trinh &mdash; TonkaHacks 2022.</p>
+
+        <figure class="pd-figure pd-hero">
+          <video src="assets/projects/communitree/demo.mp4" controls autoplay muted loop playsinline preload="metadata"></video>
+          <figcaption>App demo &mdash; daily challenge feed and the navigable 3-D friend map.</figcaption>
+        </figure>
+
+        <div class="pd-section">
+          <h3>At a glance</h3>
+          <ul>
+            <li>Software &middot; social / mobile concept</li>
+            <li>TonkaHacks 2022 (Minnesota's second-largest student hackathon) &mdash; <strong>1st Place</strong> and <strong>Most Technical Project</strong>, November 2022</li>
+            <li>3-D friend map built with three.js on a Node.js backend</li>
+          </ul>
+        </div>
+
+        <div class="pd-section">
+          <h3>The insight</h3>
+          <p>Behavioral research (Alex Laskey's TED talk) shows that social proof &mdash; &ldquo;your neighbors are already doing this&rdquo; &mdash; changes behavior more than appeals to money or morality, and social media measurably amplifies climate awareness. So the goal was to make being sustainable social, visible, and fun.</p>
+        </div>
+
+        <div class="pd-section">
+          <h3>The product</h3>
+          <p>Every user gets the same daily challenge &mdash; for example &ldquo;take public transit or carpool today&rdquo; or &ldquo;recycle a plastic or paper product.&rdquo; Users post a photo, build streaks for consecutive days completed, and see their friends' streaks. A navigable 3-D map lets you click a friend's profile and view their most recent photos at the locations where they were taken. Target audience: teens and young adults. Envisioned next steps included a community-events feed with achievement badges and map trees that grow with your streak.</p>
+          <div class="pd-links">
+            <a class="pd-link" href="https://devpost.com/software/communitree-jmpg81" target="_blank" rel="noopener">Devpost project page &nearr;</a>
+          </div>
+        </div>
+
+        <div class="pd-section">
+          <h3>Documents</h3>
+          <div class="pd-docs">
+            <div class="pd-doc">
+              <p class="pd-doc-title">TonkaHacks 2022 &mdash; project write-up</p>
+              <iframe data-pdf="assets/projects/communitree/docs/CommuniTree-TonkaHacks-Write-Up.pdf#view=FitH" title="CommuniTree TonkaHacks write-up" loading="lazy"></iframe>
+              <a class="pd-doc-dl" href="assets/projects/communitree/docs/CommuniTree-TonkaHacks-Write-Up.pdf" target="_blank" rel="noopener">Open in a new tab / download &nearr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-project-eeg-depression" data-panel="project-eeg-depression" data-zoom-from="projects" data-title="Gamma EEG Depression Screening">
+      <div class="panel-inner">
+        <a class="inline-back-link" href="#/projects" data-nav="projects">&larr; Back to Engineering Projects</a>
+        <p class="eyebrow">PROJECT ARCHIVE · 04</p>
+        <h2 class="section-title">Gamma EEG Depression Screening</h2>
+        <p class="section-lede">Machine-learning models that screen for depressive disorder from five minutes of resting-state EEG.</p>
+        <p class="pd-lede-team">Jennifer Cook, Yaqub Hashi, Katriana Trinh, Ibrahim Halim &mdash; BMEN 5413, Neural Decoding &amp; Interfacing.</p>
+
+        <figure class="pd-figure pd-hero">
+          <img src="assets/projects/eeg-depression/title-slide.png" alt="Depressive Disorder Analysis using Gamma EEG Data, title slide">
+          <figcaption>Final project presentation title slide.</figcaption>
+        </figure>
+
+        <div class="pd-section">
+          <h3>At a glance</h3>
+          <ul>
+            <li>Neural decoding / machine learning</li>
+            <li>Dataset: Park et&nbsp;al. 2021 resting-state EEG (10&ndash;20 montage, eyes closed, 128&nbsp;Hz), gamma-band power and coherence</li>
+            <li>Compared MLP, Random Forest, and XGBoost classifiers</li>
+            <li>Best model: tuned XGBoost &mdash; ROC-AUC 74%, d&prime; 1.24</li>
+          </ul>
+        </div>
+
+        <div class="pd-section">
+          <h3>Background</h3>
+          <p>About 5.7% of adults have depressive disorder, and diagnosis still relies on self-report and psychiatric evaluation, which are subjective and confounded by comorbidity. Reduced gamma-band EEG activity is an emerging, comparatively consistent biomarker &mdash; it holds across symptom severity, medication, comorbid anxiety, and demographics &mdash; making resting-state EEG an appealing, task-free, unbiased signal.</p>
+        </div>
+
+        <div class="pd-section">
+          <h3>Method</h3>
+          <p>The pipeline filters the EEG, converts it to the frequency domain by FFT, isolates the gamma band, and computes power spectral density and coherence for every bipolar channel. After removing NaNs, downsampling for efficiency, and a train/test split, three classifiers were trained and compared: a multilayer perceptron, a random forest, and XGBoost, followed by feature down-selection and regularization.</p>
+        </div>
+
+        <div class="pd-section">
+          <h3>Results</h3>
+          <p>The MLP struggled (ROC-AUC 49%, d&prime; 0.16). Random forest did better (72%, d&prime; 0.77), and a tuned XGBoost was best (74%, d&prime; 1.24) with 93% recall on depressed patients but only 42% on healthy controls. Coherence features mattered more than raw power, and the parietal and occipital regions were most informative. IQ and age acted as confounders, and every model was biased toward the depressed class because healthy controls were under-represented.</p>
+          <div class="pd-gallery">
+            <figure class="pd-figure">
+              <img src="assets/projects/eeg-depression/model-comparison.png" alt="Comparison of MLP, RF, and XGBoost" loading="lazy">
+              <figcaption>Model comparison &mdash; ROC-AUC, per-class recall, and d&prime;.</figcaption>
+            </figure>
+            <figure class="pd-figure">
+              <img src="assets/projects/eeg-depression/xgboost-confusion-matrix.jpg" alt="Optimized XGBoost confusion matrix" loading="lazy">
+              <figcaption>Tuned XGBoost confusion matrix (37/3 depressed, 11/8 healthy control).</figcaption>
+            </figure>
+            <figure class="pd-figure">
+              <img src="assets/projects/eeg-depression/feature-importance.jpg" alt="Top 15 predictive brain features" loading="lazy">
+              <figcaption>Top predictive features &mdash; mostly gamma coherence pairs, plus IQ and age.</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="pd-section">
+          <h3>Future directions</h3>
+          <p>Collect more healthy controls, add other frequency bands (delta, theta, alpha), test on a larger and cross-population sample, and explore additional network architectures.</p>
+        </div>
+
+        <div class="pd-section">
+          <h3>Documents</h3>
+          <div class="pd-docs">
+            <div class="pd-doc">
+              <p class="pd-doc-title">Final project presentation</p>
+              <iframe data-pdf="assets/projects/eeg-depression/docs/Depressive-Disorder-Gamma-EEG-Final-Presentation.pdf#view=FitH" title="Depressive disorder gamma EEG final presentation" loading="lazy"></iframe>
+              <a class="pd-doc-dl" href="assets/projects/eeg-depression/docs/Depressive-Disorder-Gamma-EEG-Final-Presentation.pdf" target="_blank" rel="noopener">Open in a new tab / download &nearr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-project-lfp-analysis" data-panel="project-lfp-analysis" data-zoom-from="projects" data-title="LFP Processing Analysis">
+      <div class="panel-inner">
+        <a class="inline-back-link" href="#/projects" data-nav="projects">&larr; Back to Engineering Projects</a>
+        <p class="eyebrow">PROJECT ARCHIVE · 05</p>
+        <h2 class="section-title">LFP Processing Analysis</h2>
+        <p class="section-lede">Time-resolved analysis of intracranial local field potentials during a cognitive-conflict task.</p>
+        <p class="pd-lede-team">BMEN 5413. Data courtesy of the Herman-Darrow Lab, used with permission and not redistributed.</p>
+
+        <figure class="pd-figure pd-hero">
+          <img src="assets/projects/lfp-analysis/average-haa.png" alt="Average Hilbert analytic amplitude across channels">
+          <figcaption>Average Hilbert analytic amplitude across nine bipolar channels, for Theta and High Gamma bands, aligned to stimulus onset and to response.</figcaption>
+        </figure>
+
+        <div class="pd-section">
+          <h3>At a glance</h3>
+          <ul>
+            <li>Neural signal processing</li>
+            <li>Data: intracranial recordings, 9 bipolar orbitofrontal channels, 500&nbsp;Hz; Hilbert analytic amplitude for Theta (4&ndash;7.5&nbsp;Hz) and High Gamma (62&ndash;170&nbsp;Hz)</li>
+            <li>Methods: ROC / AUC effect sizes, d&prime;, and time-resolved linear models (Wilkinson notation) with False Discovery Rate correction</li>
+          </ul>
+        </div>
+
+        <div class="pd-section">
+          <h3>What it does</h3>
+          <p>For every channel and time point, the analysis tests whether band amplitude discriminates low- versus high-conflict trials (AUC, converted to d&prime;). It then pools channels into time-resolved linear models &mdash; HAA&nbsp;~&nbsp;conflictLevel&nbsp;+&nbsp;reactionTime&nbsp;+&nbsp;channel &mdash; fit at each time point, and corrects the resulting p-values with False Discovery Rate.</p>
+        </div>
+
+        <div class="pd-section">
+          <h3>Findings</h3>
+          <p>Theta activity is better aligned to stimulus onset; High Gamma is better aligned to the response. The best single-channel discrimination was High Gamma on channel LOF3&ndash;LOF2, AUC &asymp; 0.70 near response time; overall effect sizes are small-to-medium (d&prime; &asymp; 0.4&ndash;0.5 for theta). Group-level models show High Gamma carries far more reaction-time-linked activity, while theta shows a negative conflict t-statistic around the stimulus. FDR correction flagged a strong negative theta peak near 1000&nbsp;ms post-stimulus. High-gamma noise (muscle and electrode artifacts) would be better handled with ICA or L2 regularization than with an analog filter.</p>
+          <div class="pd-gallery">
+            <figure class="pd-figure">
+              <img src="assets/projects/lfp-analysis/auc-curves.png" alt="AUC curves across channels over time" loading="lazy">
+              <figcaption>AUC over time for each channel and band &mdash; values far from 0.5 indicate conflict encoding.</figcaption>
+            </figure>
+            <figure class="pd-figure">
+              <img src="assets/projects/lfp-analysis/t-statistics.png" alt="Time-resolved linear model t-statistics" loading="lazy">
+              <figcaption>Time-resolved linear-model t-statistics for conflict level and reaction time.</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="pd-section">
+          <h3>Documents</h3>
+          <div class="pd-docs">
+            <div class="pd-doc">
+              <p class="pd-doc-title">Analysis write-up (published MATLAB report)</p>
+              <iframe data-pdf="assets/projects/lfp-analysis/docs/LFP-Processing-Analysis-Write-Up.pdf#view=FitH" title="LFP processing analysis write-up" loading="lazy"></iframe>
+              <a class="pd-doc-dl" href="assets/projects/lfp-analysis/docs/LFP-Processing-Analysis-Write-Up.pdf" target="_blank" rel="noopener">Open in a new tab / download &nearr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-project-skin-diffusion" data-panel="project-skin-diffusion" data-zoom-from="projects" data-title="Topical Cream Diffusion Model">
+      <div class="panel-inner">
+        <a class="inline-back-link" href="#/projects" data-nav="projects">&larr; Back to Engineering Projects</a>
+        <p class="eyebrow">PROJECT ARCHIVE · 06</p>
+        <h2 class="section-title">Topical Cream Diffusion Model</h2>
+        <p class="section-lede">A 2-D finite-element model of how a topical drug diffuses from the skin surface into the dermis.</p>
+        <p class="pd-lede-team">Solo project &mdash; BMEN 5251, Finite Element Methods for Biomedical Engineers.</p>
+
+        <figure class="pd-figure pd-hero">
+          <img src="assets/projects/skin-diffusion/concentration-t72.png" alt="Drug concentration heat map at 72 hours">
+          <figcaption>Drug concentration through the skin region of interest at t&nbsp;=&nbsp;72&nbsp;hours.</figcaption>
+        </figure>
+
+        <div class="pd-section">
+          <h3>At a glance</h3>
+          <ul>
+            <li>Finite element modeling in MATLAB</li>
+            <li>Governing equation: Fick's second law (transient, two-dimensional)</li>
+            <li>Drug: 0.1% tacrolimus ointment (c<sub>0</sub> = 0.04&nbsp;mg, k = 0.0105&nbsp;hr<sup>&minus;1</sup>)</li>
+            <li>Validation: FEM half-life 66.07&nbsp;hr vs. analytical ln(2)/k = 66.01&nbsp;hr &mdash; 0.08% error</li>
+          </ul>
+        </div>
+
+        <div class="pd-section">
+          <h3>Setup</h3>
+          <p>The region of interest is a trapezoid running from the transdermal layer about 3.5&nbsp;mm down into the dermis, widening with depth to capture lateral spread. The surface uses a Dirichlet boundary with a time-decaying source c<sub>0</sub>e<sup>&minus;kt</sup>, the bottom is held at zero, and the sides are no-flux Neumann boundaries. A triangular mesh (~500 nodes) is generated with the Barocas <code>MyMesher</code> routine; the solver uses linear basis functions, 3-point Gauss quadrature, assembled mass and stiffness matrices, and <code>ode15s</code> over 72 hours.</p>
+          <div class="pd-gallery">
+            <figure class="pd-figure">
+              <img src="assets/projects/skin-diffusion/skin-mesh.png" alt="Triangular finite element mesh of the skin region" loading="lazy">
+              <figcaption>Triangular FEM mesh of the skin region of interest.</figcaption>
+            </figure>
+            <figure class="pd-figure">
+              <img src="assets/projects/skin-diffusion/concentration-t0.png" alt="Drug concentration at t = 0" loading="lazy">
+              <figcaption>Initial condition &mdash; drug applied at the surface, zero elsewhere.</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="pd-section">
+          <h3>Result</h3>
+          <p>Concentration marches down the region of interest over 72 hours. Tracking the surface-boundary concentration until it reaches half of c<sub>0</sub> reproduces the analytical first-order half-life to within 0.08%, validating the FEM implementation.</p>
+          <figure class="pd-figure">
+            <img src="assets/projects/skin-diffusion/top-boundary-vs-time.png" alt="Surface concentration versus time" loading="lazy">
+            <figcaption>Surface-boundary concentration vs. time, with the half-concentration line marked.</figcaption>
+          </figure>
+        </div>
+
+        <div class="pd-section">
+          <h3>Documents</h3>
+          <div class="pd-docs">
+            <div class="pd-doc">
+              <p class="pd-doc-title">Final project write-up</p>
+              <iframe data-pdf="assets/projects/skin-diffusion/docs/Topical-Cream-Diffusion-Final-Write-Up.pdf#view=FitH" title="Topical cream diffusion final write-up" loading="lazy"></iframe>
+              <a class="pd-doc-dl" href="assets/projects/skin-diffusion/docs/Topical-Cream-Diffusion-Final-Write-Up.pdf" target="_blank" rel="noopener">Open in a new tab / download &nearr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-project-neuron-propagation" data-panel="project-neuron-propagation" data-zoom-from="projects" data-title="Neuron Stimulus Propagation">
+      <div class="panel-inner">
+        <a class="inline-back-link" href="#/projects" data-nav="projects">&larr; Back to Engineering Projects</a>
+        <p class="eyebrow">PROJECT ARCHIVE · 07</p>
+        <h2 class="section-title">Neuron Stimulus Propagation</h2>
+        <p class="section-lede">A finite-element cable-equation model of action-potential propagation down an active nerve fiber.</p>
+        <p class="pd-lede-team">Solo project &mdash; BMEN 5251, Finite Element Methods for Biomedical Engineers.</p>
+
+        <figure class="pd-figure pd-hero">
+          <img src="assets/projects/neuron-propagation/voltage-along-fiber.png" alt="Voltage along the fiber at selected times">
+          <figcaption>Membrane voltage along the 10&nbsp;cm fiber at selected times &mdash; the spike initiates at the stimulus site (x&nbsp;=&nbsp;3&nbsp;cm) and propagates outward.</figcaption>
+        </figure>
+
+        <div class="pd-section">
+          <h3>At a glance</h3>
+          <ul>
+            <li>Finite element modeling in MATLAB</li>
+            <li>Governing equation: the cable equation with Hodgkin&ndash;Huxley membrane dynamics</li>
+            <li>Use case: predicting conduction velocity and the stimulus duration needed for vagal nerve stimulation</li>
+          </ul>
+        </div>
+
+        <div class="pd-section">
+          <h3>Setup</h3>
+          <p>The fiber is a 10&nbsp;cm cylinder (101 nodes), treated as one-dimensional with sealed, zero-flux ends. Hodgkin&ndash;Huxley ionic currents (I<sub>Na</sub>, I<sub>K</sub>, I<sub>leak</sub>) with m, h, n gating are carried over from prior BMEN 5411 work. An external stimulus at x&nbsp;=&nbsp;3&nbsp;cm is a 20&nbsp;kHz pulsed sinusoid (0.25&nbsp;ms on/off, 2&nbsp;mA). The FEM assembles element-wise mass and stiffness matrices with 2-point Gauss quadrature, integrates the gating variables alongside voltage, and solves with <code>ode15s</code> over 20&nbsp;ms. Resting potential is &minus;65&nbsp;mV; threshold is &minus;55&nbsp;mV.</p>
+          <figure class="pd-figure">
+            <img src="assets/projects/neuron-propagation/stimulus-waveform.png" alt="20 kHz pulsed sinusoidal stimulus" loading="lazy">
+            <figcaption>The external stimulus &mdash; a 20&nbsp;kHz pulsed sinusoid with 0.25&nbsp;ms on/off gating.</figcaption>
+          </figure>
+        </div>
+
+        <div class="pd-section">
+          <h3>Result</h3>
+          <p>The stimulus drives the fiber midpoint above threshold and a full action potential fires. Snapshots of voltage along the fiber from 1 to 20&nbsp;ms show the spike initiating at the stimulus site and propagating in both directions toward the sealed ends.</p>
+          <figure class="pd-figure">
+            <img src="assets/projects/neuron-propagation/voltage-midpoint.png" alt="Membrane voltage at the fiber midpoint over time" loading="lazy">
+            <figcaption>Membrane voltage at the fiber midpoint &mdash; a clear action potential near 19&ndash;20&nbsp;ms.</figcaption>
+          </figure>
+        </div>
+
+        <div class="pd-section">
+          <h3>Documents</h3>
+          <div class="pd-docs">
+            <div class="pd-doc">
+              <p class="pd-doc-title">Midterm project write-up</p>
+              <iframe data-pdf="assets/projects/neuron-propagation/docs/Neuron-Stimulus-Propagation-Midterm-Write-Up.pdf#view=FitH" title="Neuron stimulus propagation midterm write-up" loading="lazy"></iframe>
+              <a class="pd-doc-dl" href="assets/projects/neuron-propagation/docs/Neuron-Stimulus-Propagation-Midterm-Write-Up.pdf" target="_blank" rel="noopener">Open in a new tab / download &nearr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================================
+         HOBBIES — gallery page. Each card below is a data-nav
+         trigger pointing at its own detail panel further down
+         (data-panel="hobby-N", each declaring data-zoom-from="hobbies"
+         so it reuses this section's background zoom — no script.js
+         edit needed).
+
+         TO ADD ANOTHER HOBBY PROJECT:
+           1. Duplicate one <button class="gallery-card"> below,
+              point data-nav at a new unique key (e.g. "hobby-3") and
+              update the title/desc spans.
+           2. Duplicate the whole "panel-hobby-1" <section> further
+              down, give it a matching data-panel value, and fill in
+              its content/media slots.
+         ============================================================= -->
+    <section class="panel" id="panel-hobbies" data-panel="hobbies">
+      <div class="panel-inner">
+        <p class="eyebrow">AREA · 03 OF 05 · HOBBIES ARCHIVE</p>
+        <h2 class="section-title">Hobbies</h2>
+        <p class="section-lede">[Placeholder — intro to whatever lives here outside of engineering: art, music, writing, design, film, sports, etc.]</p>
+
+        <div class="project-grid gallery-grid">
+          <!-- GALLERY CARD TEMPLATE — duplicate this <button> for each
+               new hobby. data-nav must match a data-panel value on a
+               detail <section> below. -->
+          <button class="project-card gallery-card" data-nav="hobby-1">
+            <div class="project-card-head">
+              <h3>[Hobby One]</h3>
+              <span class="project-tag">[Medium / Category]</span>
+            </div>
+            <p>[One or two sentence teaser. Click through to the full page for media + writeup.]</p>
+          </button>
+
+          <button class="project-card gallery-card" data-nav="hobby-2">
+            <div class="project-card-head">
+              <h3>[Hobby Two]</h3>
+              <span class="project-tag">[Medium / Category]</span>
+            </div>
+            <p>[One or two sentence teaser. Click through to the full page for media + writeup.]</p>
+          </button>
+
+          <article class="project-card project-card-empty">
+            <div class="project-card-head">
+              <h3>Your next hobby</h3>
+              <span class="project-tag">Reserved slot</span>
+            </div>
+            <p>Duplicate the gallery card template above (and its matching detail section) to add more.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================================
+         HOBBY DETAIL — TEMPLATE PAGE 1 OF 2
+         data-zoom-from="hobbies" means this page has no landmark of
+         its own; it just reuses the Hobbies background zoom.
+         Everything in here is a labeled placeholder slot.
+         ============================================================= -->
+    <section class="panel" id="panel-hobby-1" data-panel="hobby-1" data-zoom-from="hobbies" data-title="[Hobby One]">
+      <div class="panel-inner">
+        <a class="inline-back-link" href="#/hobbies" data-nav="hobbies">← Back to Hobbies</a>
+
+        <p class="eyebrow">HOBBIES ARCHIVE · 01</p>
+        <h2 class="section-title">[Hobby One — Title]</h2>
+        <p class="section-lede">[Placeholder — one-line subtitle/medium, e.g. "Oil painting" or "Trail running."]</p>
+
+        <!-- HERO MEDIA SLOT — the big featured image/video for this
+             hobby. Replace the placeholder with an <img>, <video>,
+             or embed (e.g. YouTube/Vimeo iframe). -->
+        <div class="media-slot media-slot--hero">
+          <!-- <img src="media/hobby-1/hero.jpg" alt="[describe]"> -->
+          <span class="media-slot-label">Drop hero image / video here</span>
+        </div>
+
+        <!-- DESCRIPTION SLOT -->
+        <p class="editable-note">✎ Write the full description here: what it is, how long you've done it, why it matters to you.</p>
+
+        <!-- MEDIA GALLERY SLOT — grid for additional photos, process
+             shots, video clips, etc. Duplicate .media-slot--grid-item
+             for each additional piece of media. -->
+        <div class="media-gallery">
+          <div class="media-slot media-slot--grid-item">
+            <span class="media-slot-label">Media</span>
+          </div>
+          <div class="media-slot media-slot--grid-item">
+            <span class="media-slot-label">Media</span>
+          </div>
+          <div class="media-slot media-slot--grid-item">
+            <span class="media-slot-label">Media</span>
+          </div>
+        </div>
+
+        <!-- DETAILS SLOT -->
+        <ul class="project-meta">
+          <li>[Detail / achievement]</li>
+          <li>[Tools / medium]</li>
+          <li>[Date or duration]</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- =============================================================
+         HOBBY DETAIL — TEMPLATE PAGE 2 OF 2
+         Identical structure to page 1 — this proves the pattern
+         repeats cleanly. Duplicate THIS section (not page 1) when
+         adding hobby 3, 4, etc.
+         ============================================================= -->
+    <section class="panel" id="panel-hobby-2" data-panel="hobby-2" data-zoom-from="hobbies" data-title="[Hobby Two]">
+      <div class="panel-inner">
+        <a class="inline-back-link" href="#/hobbies" data-nav="hobbies">← Back to Hobbies</a>
+
+        <p class="eyebrow">HOBBIES ARCHIVE · 02</p>
+        <h2 class="section-title">[Hobby Two — Title]</h2>
+        <p class="section-lede">[Placeholder — one-line subtitle/medium.]</p>
+
+        <div class="media-slot media-slot--hero">
+          <span class="media-slot-label">Drop hero image / video here</span>
+        </div>
+
+        <p class="editable-note">✎ Write the full description here: what it is, how long you've done it, why it matters to you.</p>
+
+        <div class="media-gallery">
+          <div class="media-slot media-slot--grid-item">
+            <span class="media-slot-label">Media</span>
+          </div>
+          <div class="media-slot media-slot--grid-item">
+            <span class="media-slot-label">Media</span>
+          </div>
+          <div class="media-slot media-slot--grid-item">
+            <span class="media-slot-label">Media</span>
+          </div>
+        </div>
+
+        <ul class="project-meta">
+          <li>[Detail / achievement]</li>
+          <li>[Tools / medium]</li>
+          <li>[Date or duration]</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-experience" data-panel="experience">
+      <div class="panel-inner">
+        <p class="eyebrow">AREA · 04 OF 05 · SKILL FEED</p>
+        <h2 class="section-title">Experience &amp; Skills</h2>
+        <p class="section-lede">My full CV of accolades! </p>
+
+        <div class="exp-grid">
+          <div class="exp-block">
+            <h3>Technical Skills</h3>
+            <div class="skill-tags">
+              <span>Electrical Impedance Spectroscopy</span>
+              <span>Circuit Design</span>
+              <span>Embedded Sensing (IMU)</span>
+              <span>CAD / Mechanical Design</span>
+              <span>Rapid Prototyping</span>
+              <span>ISO 13485 / 14971</span>
+              <span>Design Verification &amp; Validation</span>
+              <span>Bench Testing</span>
+            </div>
+          </div>
+          <div class="exp-block">
+            <h3>Education</h3>
+            <div class="timeline-item">
+              <p class="timeline-title">BBmE Biomedical Engineering, minor in Mathematics</p>
+              <p class="timeline-sub">University of Minnesota–Twin Cities</p>
+              <p class="editable-note"> December 2026, graduated Summa Cum Laude</p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title">High School Diploma</p>
+              <p class="timeline-sub">Minnetonka High School</p>
+              <p class="editable-note"> June 2023, graduated Summa Cum Laude with Platinum Bilingual Seal in Mandarin Chinese</p>
+            </div>
+          </div>
+          <div class="exp-block exp-block-wide">
+            <h3>Experience</h3>
+            <div class="timeline-item">
+              <p class="timeline-title"> Edwards Lifesciences — New Product Development Intern </p>
+              <p class="timeline-sub"> June 2026 - August 2026 | Worked on the next generation of the SM3 transcatheter mitral valve replacement </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> Abbott — R&D Co-Op</p>
+              <p class="timeline-sub"> May 2025 - December 2025 | Worked in Structural Heart for premarket project Stellatus </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> Medtronic — Engineering Summer Intern</p>
+              <p class="timeline-sub">June 2024 - August 2024 | Worked under the Business Process Excellence Team</p>
+            </div>
+            <p class="editable-note">✎ Add internships, research positions, and leadership roles here.</p>
+          </div>
+          <div class="exp-block exp-block-wide">
+            <h3>Awards</h3>
+            <div class="timeline-item">
+              <p class="timeline-title"> SWE-MN Scholarship Winner </p>
+              <p class="timeline-sub"> August 2026 </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> BME Senior Design Showcase -- 1st Prize</p>
+              <p class="timeline-sub"> April 2026 | Awarded for project PessAssist Device (PAD) </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> JHU Healthcare Design Competition Finalists -- Advanced Health Division </p>
+              <p class="timeline-sub">March 2026 | Awarded for project BowelProbe. </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> Biz Pitch Finalists presented by Carlson School of Management </p>
+              <p class="timeline-sub"> October 2025 | Awarded for project PessAssist Device (PAD) </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> CSE Merit Scholarship </p>
+              <p class="timeline-sub"> April 2025 | Awarded to a high performing student at the University of Minnesota's College of Science and Engineering who demonstrates a strong academic record, demonstrated leadership skills, campus involvement outside of the traditional classroom, and clear career and future goals. </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> Tony Diggs Excellence Award for Leadership Development </p>
+              <p class="timeline-sub"> March 2025 | Awarded to UMN Robotics while I was serving on board for fostering a community and opportunity for technical leadership development and growth. </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> SWE-MN Intricon Scholarship Winner </p>
+              <p class="timeline-sub"> June 2024 |  </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> Twin Cities Regional Science Fair 1st Place -- Cellular and Molecular Biology Category </p>
+              <p class="timeline-sub"> February 2023 |  </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> TonkaHacks Hackathon </p>
+              <p class="timeline-sub"> November 2022 | Awarded for project CommuniTree </p>
+            </div>
+            <p class="editable-note">✎ Add internships, research positions, and leadership roles here.</p>
+          </div>
+          <div class="exp-block exp-block-wide">
+            <h3>Relvant Coursework</h3>
+            <div class="timeline-item">
+              <p class="timeline-title"> Advanced Bioelectricity and Instrumentation </p>
+              <p class="timeline-sub"> BMEN5101 | Topics covered include concepts of medical instrumentations, basic sensors and principles, bioelectricity (EEG, Hodgkin-Huxley, Basic Electrophysiology), ECG, and Biopotential electrodes.</p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> Advanced Biomaterials </p>
+              <p class="timeline-sub"> BMEN5001 |  </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> Biomedical Device Prototyping</p>
+              <p class="timeline-sub"> BMEN2151 | Topics include using FEM to obtain a numerical solution to 1D and 2D differential equations, including transient and nonlinear problems and understanding the mathematics behind finite element modeling. </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> CAD for Biomedical Engineers</p>
+              <p class="timeline-sub"> BMEN4013 | </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> Digital Signal Processing</p>
+              <p class="timeline-sub"> EE4541 | </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> Neural Engineering</p>
+              <p class="timeline-sub"> BMEN5411 | </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> Neural Decoding and Interfacing</p>
+              <p class="timeline-sub"> BMEN5413 | </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> Mathematical Analysis of Biological Networks</p>
+              <p class="timeline-sub"> MATH5445 | </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> Finite Element Methods for Biomedical Engineeers</p>
+              <p class="timeline-sub"> BMEN5251 | </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> Fundamentals of Pharmacology </p>
+              <p class="timeline-sub"> PHAR3700 | </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> Graph Theory and Nonenumerative Combinatorics</p>
+              <p class="timeline-sub"> MATH5707 | </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title"> Principles of Physiology with Lab</p>
+              <p class="timeline-sub"> PHSL3061&amp;PHSL3071 | </p>
+            </div>
+            <div class="timeline-item">
+              <p class="timeline-title">Cardiovascular Devices</p>
+              <p class="timeline-sub"> BMEN5601 | </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-contact" data-panel="contact">
+      <div class="panel-inner">
+        <p class="eyebrow">AREA · 05 OF 05 · TRANSMIT</p>
+        <h2 class="section-title">Contact</h2>
+        <p class="section-lede">Open to opportunities in medical device design, R&amp;D, and biomedical innovation.</p>
+        <div class="contact-grid">
+          <a class="contact-link" href="mailto:katriana.r.trinh@gmail.com">
+            <span class="contact-link-label">Email</span>
+            <span class="contact-link-value">katriana.r.trinh@gmail.com</span>
+          </a>
+          <a class="contact-link" href="https://www.linkedin.com/in/katrianatrinh/">
+            <span class="contact-link-label">LinkedIn</span>
+            <span class="contact-link-value">www.linkedin.com/in/katrianatrinh/</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

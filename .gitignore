@@ -1,0 +1,20 @@
+# Local editor and assistant settings
+.claude/
+.codex/
+.idea/
+.vscode/
+
+# Credentials and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Generated files and operating-system metadata
+node_modules/
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db
+*.log

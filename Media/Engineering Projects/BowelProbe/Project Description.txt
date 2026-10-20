@@ -1,0 +1,9 @@
+The goal of BowelProbe is to increase the accuracy in quantifying and characterizing metabolic activity to prevent over or under resection of bowel tissue. Improper resection of the bowel ultimately leads to repeated surgery procedures and further complications. BowelProbe achieves this through bowel impedance measurements compared against a threshold value. 
+
+Bowel Probe is a Real-Time, Intra-operative Tool for Quick and Reliable Decision Making. It combines intuitive logic with a seamless extension into emerging robotics assisted surgery modes modular design. 
+
+BowelProbe was started as part of the Fall 2024 and Spring 2025 Physicians Inspired Engineering Solutions Research Program (PIES) alongside Asher Shertok, Rebecca Kroll, Cassandra Doshi, and Aaron Lorenz. It is carried forward by Katriana Trinh, Asher Shertok, and Jason Jensen.  This project was presented at the 2026 John Hopkins University Center of Bioengineering and Design (CBID) Device Design Competition where we were an Advanced Health Finalist (1 of 8 out of 500+ teams).A provisional patent has been filed. 
+
+My personal contributions: 
+
+Used SOLIDWORKS to design iterations for an ergonomic handheld probe. Researched best electrode and circuit components to use that does not harm tissue. Manufacturing subject matter expert for material properties of electrode and housing of electrical components that are biocompatible. Primary spokesperson in developing scope of product and how it addresses the unmet clinical need and future applications. Product Development Director.

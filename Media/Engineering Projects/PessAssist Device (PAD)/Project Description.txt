@@ -1,0 +1,15 @@
+PessAssist Device (PAD) is designed to restore autonomy and independence for women who use a Gellhorn pessary to manage pelvic organ prolapse (POP). POP affects over 50% of women, yet current options are limited to pessary use or surgery. Gellhorn pessaries often require significant mobility and hand dexterity for safe removal -- a challenge PAD directly addresses.
+
+Our device tackles the three major pain points of the Gellhorn pessary removal process by providing:
+
+1. Anatomy orientation feedback for confident positioning
+
+2. A mechanical locking mechanism to prevent accidental pessary loss
+
+3. Automated suction breakage for quick and painless pessary removal
+
+PAD was created during the Fall 2025 and Spring 2026 semesters alongside Elizabeth Ngo, Jennifer Cook, Julia Gross, Sanab Abdi, and Sophia Zafari for the University of Minnesota’s Biomedical Engineering Senior Design Capstone Project. This project was a 2025 Biz Pitch Finalist (1 of 8 out of 50 teams) and won first place at the BME Senior Design Showcase (1 out of 13 teams). A provisional patent has been filed. 
+
+My personal contributions: 
+
+Performed user interviews with urologists and gynecologists and nurses and the potential pain points they see with pelvic organ prolapse. Wrote a survey and analyzed the responses of pelvic organ prolapse patients to garner more data on the unmet clinical need and what the patients are experiencing. Spearheaded and led system level mechanism interaction to address unmet clinical need. Ideated best mechanical locking mechanism. Researched proper motor with enough power and proper placement on device for stability purposes. Designed circuit schematic and wrote ARDUINO code to activate motor on press of a button and proper placement of suction rmoval mechanism placement with rest of device. Authored Design Verification protocol for handheld mobility evaluation of our J-handle. Authored acceptance criteria for rest of our system requirements. Executed DV as an operator for all system requirements. Team’s subject matter expert on motors, tuning, and power.
